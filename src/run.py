@@ -1,10 +1,20 @@
-import logging
-from telegram.ext import ApplicationBuilder, CommandHandler
 import sys
+import logging
 
-import telegram.ext
+import telegram
+from telegram.ext import (
+    ApplicationBuilder, 
+    CommandHandler,
+    MessageHandler,
+    filters
+)
 
-from .handlers import start_cmd_handler
+from .handlers import (
+    start_cmd_handler, 
+    voice_message_handler, 
+    audio_message_handler,
+    unknown_message_handler
+)
 
 
 def get_token() -> str:
@@ -15,9 +25,12 @@ def get_token() -> str:
 def start():
     app = ApplicationBuilder().token(get_token()).build()
 
-    app.add_handler(
-        CommandHandler('start', start_cmd_handler)
-    )
+    app.add_handlers([
+        CommandHandler('start', start_cmd_handler),
+        MessageHandler(filters.VOICE, voice_message_handler),
+        MessageHandler(filters.AUDIO, audio_message_handler),
+        MessageHandler(filters.COMMAND, unknown_message_handler),
+    ])
 
     # requests logging
     logging.basicConfig(filename='log/api.log', level=logging.DEBUG,
