@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from .custom_request import send_bytearray
+from .custom_request import send_file
 
 
 async def start_cmd_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -12,9 +12,10 @@ async def start_cmd_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def voice_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     voice = await update.message.voice.get_file()
-    response = send_bytearray(
-        update.effective_user.id, 
-        await voice.download_as_bytearray()
+    user_id = update.effective_user.id
+    response = send_file(
+        user_id,
+        await voice.download_to_drive(f'./{user_id}')
     )
     await context.bot.send_message(
         update.effective_chat.id, response
@@ -23,9 +24,10 @@ async def voice_message_handler(update: Update, context: ContextTypes.DEFAULT_TY
 
 async def audio_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file = await update.message.audio.get_file()
-    response = send_bytearray(
-        update.effective_user.id, 
-        await file.download_as_bytearray()
+    user_id = update.effective_user.id
+    response = send_file(
+        user_id,
+        await file.download_to_drive(f'./{user_id}')
     )
     await context.bot.send_message(
         update.effective_chat.id, response
