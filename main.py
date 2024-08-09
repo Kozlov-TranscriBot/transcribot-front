@@ -1,6 +1,6 @@
 from src.run import start
-from src.custom_request import send_file
+from src.misc import create_dir
 
 if __name__ == '__main__':
+    create_dir()
     start()
-    # print(send_file(1, "./test.mp3"))
