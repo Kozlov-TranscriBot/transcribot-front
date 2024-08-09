@@ -18,7 +18,7 @@ from .handlers import (
 
 
 def get_token() -> str:
-    with open("./src/token.txt") as token_file:
+    with open("./token.txt") as token_file:
         return token_file.readline()
 
 
